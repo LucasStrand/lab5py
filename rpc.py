@@ -18,7 +18,7 @@ def serversideGetPlaySocket():
             data = sockC.recv(1024)
             if not data:
                 break
-            clientsidedPlayerMove = data.decode('ascii')
+            clientsidedPlayer = data.decode('ascii')
             print('received:', data.decode('ascii'))
             answer = 'thanks for the data!'
             sockC.sendall(bytearray(answer, 'ascii'))
@@ -50,7 +50,7 @@ def playerChoice():
         message = input('Make your choice: (r)Rock, (p)Paper, (s)Sissors: ')
     return message
 
-def checkWin(serversidedPlayerMove, clientsidedPlayerMove):
+def checkWin(serversidedPlayer, clientsidedPlayer):
 
     choiceDict = {'rock': 0, 'paper': 1, 'scissors':2}
 
