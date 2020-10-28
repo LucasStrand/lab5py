@@ -14,13 +14,21 @@ def serversideGetPlaySocket():
         
         while True:
             serversidedPlayerInput = playerChoice()
-            print("Your choice ", serversidedPlayerInput)
+            print('Your choice ', serversidedPlayerInput)
             data = sockC.recv(1024)
             if not data:
                 break
             clientsidedPlayer = data.decode('ascii')
+            serverDidWin, clientDidWin = checkWin(serversidedPlayerInput,clientsidedPlayer)
+            if serverDidWin:
+                answer = 'Server won!'
+            elif clientDidWin:
+                answer = 'Client won!'
+            else:
+                answer = "It's a draw nigger"
+
             print('received:', data.decode('ascii'))
-            answer = 'thanks for the data!'
+            #answer = 'thanks for the data!'
             sockC.sendall(bytearray(answer, 'ascii'))
             print('answered:', answer)
         
@@ -29,13 +37,13 @@ def serversideGetPlaySocket():
 
 
 def clientsideGetPlaySocket(host):
+    sockC = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+    sockC.connect(('127.0.0.1', 60003))
     while True:
-        sockC = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
-        sockC.connect(('127.0.0.1', 60003))
 
-        message = input('type your message: ')
+        message = playerChoice()
         sockC.sendall(bytearray(message, 'ascii'))
-        print('sent:', message)
+        print('Your choice: ', message, 'Please wait for the other player to make a move.')
 
         data = sockC.recv(1024)
         print('received:', data.decode('ascii'))
@@ -52,21 +60,32 @@ def playerChoice():
 
 def checkWin(serversidedPlayer, clientsidedPlayer):
 
-    choiceDict = {'rock': 0, 'paper': 1, 'scissors':2}
-
-    serversidedPlayerIndex = choiceDict.get(choice, 3)
-    clientsidedPlayerIndex = choiceDict.get(choice, 3)
-
-    resultMatrix = [[0,2,1],
-                    [1,0,2],
-                    [2,1,0],
-                    [3,3,3]]
-
-    resultIdx = resultMatrix[serversidedPlayerIndex][clientsidedPlayerIndex]
-
-    resultMessages = ['it is a tie', 'Client won!', 'Server won!', 'Invalid choice, try again']
+    isServersidedWin = False
+    isClientsidedWin = False
     
-    result = resultMessages[resultIdx]
+    if serversidedPlayer == clientsidedPlayer:
+        return isServersidedWin, isClientsidedWin
+    elif serversidedPlayer == "r":
+        if clientsidedPlayer == "p":
+            isClientsidedWin = True
+            return isServersidedWin, isClientsidedWin
+        else:
+            isServersidedWin = True
+            return isServersidedWin, isClientsidedWin
+    elif serversidedPlayer == "p":
+        if clientsidedPlayer == "s":
+            isClientsidedWin = True
+            return isClientsidedWin
+        else:
+            isServersidedWin = True
+            return isServersidedWin, isClientsidedWin
+    elif serversidedPlayer == "s":
+        if clientsidedPlayer == "r":
+            isClientsidedWin = True
+            return isServersidedWin, isClientsidedWin
+        else:
+            isServersidedWin = False
+            return isServersidedWin, isClientsidedWin
 
 
 ans = "?"
@@ -91,3 +110,20 @@ else:
 #scissors-> 2 |____2____|_____1______|______0_____|
 #invalid-> 3  |____3____|_____3______|______3_____|
 # # 0= tied, 1= client win, 2= server win, 3= invalid
+
+
+# choiceDict = {'rock': 0, 'paper': 1, 'scissors':2}
+
+#     serversidedPlayerIndex = choiceDict.get(choice, 3)
+#     clientsidedPlayerIndex = choiceDict.get(choice, 3)
+
+#     resultMatrix = [[0,2,1],
+#                     [1,0,2],
+#                     [2,1,0],
+#                     [3,3,3]]
+
+#     resultIdx = resultMatrix[serversidedPlayerIndex][clientsidedPlayerIndex]
+
+#     resultMessages = ['it is a tie', 'Client won!', 'Server won!', 'Invalid choice, try again']
+    
+#     result = resultMessages[resultIdx]
