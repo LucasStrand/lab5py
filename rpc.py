@@ -14,23 +14,22 @@ def serversideGetPlaySocket():
         
         while True:
             serversidedPlayerInput = playerChoice()
-            print('Your choice ', serversidedPlayerInput)
+            print('Your choice ',serversidedPlayerInput, '\nPlease wait for the other player to make a move')
             data = sockC.recv(1024)
             if not data:
                 break
             clientsidedPlayer = data.decode('ascii')
             serverDidWin, clientDidWin = checkWin(serversidedPlayerInput,clientsidedPlayer)
             if serverDidWin:
-                answer = 'Server won!'
+                answer = 'serversided win!\n'
             elif clientDidWin:
-                answer = 'Client won!'
+                answer = 'clientsided win!\n'
             else:
-                answer = "It's a draw nigger"
+                answer = 'a draw\n'
 
-            print('received:', data.decode('ascii'))
-            #answer = 'thanks for the data!'
-            sockC.sendall(bytearray(answer, 'ascii'))
-            print('answered:', answer)
+            results = 'Server chose ' + serversidedPlayerInput + ' and the client ' + clientsidedPlayer + ' and the game resulted in a ' + answer
+            print(results)
+            sockC.sendall(bytearray(results, 'ascii'))
         
         sockC.close()
         print('client {} disconnected'.format(addr))
@@ -43,12 +42,12 @@ def clientsideGetPlaySocket(host):
 
         message = playerChoice()
         sockC.sendall(bytearray(message, 'ascii'))
-        print('Your choice: ', message, 'Please wait for the other player to make a move.')
+        print('Your choice: ', message, '\nPlease wait for the other player to make a move.')
 
         data = sockC.recv(1024)
+        #print("Opponent's choice:", data.decode('ascii'))
         print('received:', data.decode('ascii'))
-        
-        sockC.close()
+    sockC.close()
 
 def playerChoice():
     message = "?"
@@ -75,7 +74,7 @@ def checkWin(serversidedPlayer, clientsidedPlayer):
     elif serversidedPlayer == "p":
         if clientsidedPlayer == "s":
             isClientsidedWin = True
-            return isClientsidedWin
+            return isServersidedWin, isClientsidedWin
         else:
             isServersidedWin = True
             return isServersidedWin, isClientsidedWin
@@ -84,7 +83,7 @@ def checkWin(serversidedPlayer, clientsidedPlayer):
             isClientsidedWin = True
             return isServersidedWin, isClientsidedWin
         else:
-            isServersidedWin = False
+            isServersidedWin = True
             return isServersidedWin, isClientsidedWin
 
 
