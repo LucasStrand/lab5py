@@ -96,33 +96,3 @@ if ans=="S":
 else:
     host = input("Enter the server's name or IP:")
     sock = clientsideGetPlaySocket(host)
-
-
-
-
-
-    # Row is serversidedPlayer and column is clientsidedPlayer
-#              rock 0      paper 1   scissors 2
-#              ___________________________________
-#rock-> 0     |____0____|_____2______|______1_____|
-#paper-> 1    |____1____|_____0______|______2_____|
-#scissors-> 2 |____2____|_____1______|______0_____|
-#invalid-> 3  |____3____|_____3______|______3_____|
-# # 0= tied, 1= client win, 2= server win, 3= invalid
-
-
-# choiceDict = {'rock': 0, 'paper': 1, 'scissors':2}
-
-#     serversidedPlayerIndex = choiceDict.get(choice, 3)
-#     clientsidedPlayerIndex = choiceDict.get(choice, 3)
-
-#     resultMatrix = [[0,2,1],
-#                     [1,0,2],
-#                     [2,1,0],
-#                     [3,3,3]]
-
-#     resultIdx = resultMatrix[serversidedPlayerIndex][clientsidedPlayerIndex]
-
-#     resultMessages = ['it is a tie', 'Client won!', 'Server won!', 'Invalid choice, try again']
-    
-#     result = resultMessages[resultIdx]
