@@ -11,7 +11,8 @@ def serversideGetPlaySocket():
         print('\nlistening...\n')
         (sockC, addr) = sockS.accept()
         print('connection from {}'.format(addr))
-        
+        serverScoreCount = 0
+        clientScoreCount = 0
         while True:
             serversidedPlayerInput = playerChoice()
             print('Your choice ',serversidedPlayerInput, '\nPlease wait for the other player to make a move')
@@ -21,16 +22,30 @@ def serversideGetPlaySocket():
             clientsidedPlayer = data.decode('ascii')
             serverDidWin, clientDidWin = checkWin(serversidedPlayerInput,clientsidedPlayer)
             if serverDidWin:
+                serverScoreCount += 1
                 answer = 'serversided win!\n'
             elif clientDidWin:
+                clientScoreCount += 1
                 answer = 'clientsided win!\n'
             else:
                 answer = 'a draw\n'
 
-            results = 'Server chose ' + serversidedPlayerInput + ' and the client ' + clientsidedPlayer + ' and the game resulted in a ' + answer
+            serverScore = str(serverScoreCount)
+            clientScore = str(clientScoreCount)
+            results = 'Server chose ' + serversidedPlayerInput + ' and the client ' + clientsidedPlayer + ' and the game resulted in a ' + answer + 'SCORE: (Server: ' + serverScore + ' | Client: ' + clientScore + ')'
             print(results)
             sockC.sendall(bytearray(results, 'ascii'))
-        
+            theScoreToWin = 3
+            if serverScoreCount == theScoreToWin:
+                winner = "Congratulations server, you've won the game!"
+                print(winner)
+                sockC.sendall(bytearray(winner, 'ascii'))
+                break
+            if clientScoreCount == theScoreToWin:
+                winner = "Congratulations client, you've won the game'!"
+                print(winner)
+                sockC.sendall(bytearray(winner, 'ascii'))
+                break
         sockC.close()
         print('client {} disconnected'.format(addr))
 
@@ -45,7 +60,6 @@ def clientsideGetPlaySocket(host):
         print('Your choice: ', message, '\nPlease wait for the other player to make a move.')
 
         data = sockC.recv(1024)
-        #print("Opponent's choice:", data.decode('ascii'))
         print('received:', data.decode('ascii'))
     sockC.close()
 
