@@ -29,7 +29,7 @@ def serversideGetPlaySocket():
                 answer = 'clientsided win!\n'
             else:
                 answer = 'a draw\n'
-
+                
             serverScore = str(serverScoreCount)
             clientScore = str(clientScoreCount)
             results = 'Server chose ' + serversidedPlayerInput + ' and the client ' + clientsidedPlayer + ' and the game resulted in a ' + answer + 'SCORE: (Server: ' + serverScore + ' | Client: ' + clientScore + ')'
