@@ -6,7 +6,7 @@ def serversideGetPlaySocket():
     sockS.bind(('127.0.0.1', 60003))
     sockS.listen(1)
 
-    # server is never shut down, we listen adn listen and listen ...
+    # server is never shut down, we listen and listen and listen ...
     while True:
         print('\nlistening...\n')
         (sockC, addr) = sockS.accept()
